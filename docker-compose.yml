@@ -8,8 +8,6 @@ services:
       - '2181:2181'
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
-    networks:
-      - cars_api
 
   kafka:
     image: 'bitnami/kafka:latest'
@@ -19,11 +17,9 @@ services:
     environment:
       - KAFKA_BROKER_ID=1
       - KAFKA_LISTENERS=PLAINTEXT://:9092
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://:127.0.0.1:9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - ALLOW_PLAINTEXT_LISTENERS_LISTENERS=yes
-    networks:
-      - cars_api
+      - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
       - zookeeper
 
