@@ -37,9 +37,20 @@ except NoBrokersAvailable as ne:
 # Create Faker instance
 fake = Faker()
 
-count = 0
+count = 1
+
+vin_list = [fake.uuid4() for _ in range(1000)]
+
 
 while True:
+
+    # Introduce duplicates
+    if count % 10 == 0:
+        duplicate_vin = random.choice(vin_list)
+    else:
+        duplicate_vin = None
+
+    vin = duplicate_vin if duplicate_vin else fake.uuid4(),
     # Location Data
     latitude = fake.latitude()
     longitude = fake.longitude()
@@ -93,6 +104,7 @@ while True:
 
     fake_data = json.dumps({
         'Timestamp': timestamp,
+        'VIN': vin,
         'Latitude': latitude,
         'Longitude': longitude,
         'Altitude': altitude,
@@ -125,7 +137,7 @@ while True:
         producer.send(TOPIC, value=fake_data)
         producer.flush()
 
-        logging.info(f"INFO: Fake data {count + 1} sent successfully!")
+        logging.info(f"INFO: Fake data {count} sent successfully!")
         count += 1
         time.sleep(1)
     except NoBrokersAvailable as ne:
